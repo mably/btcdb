@@ -10,9 +10,9 @@ import (
 	"math"
 	"sync"
 
-	"github.com/conformal/btcdb"
-	"github.com/conformal/btcutil"
-	"github.com/conformal/btcwire"
+	"github.com/mably/btcdb"
+	"github.com/mably/btcutil"
+	"github.com/mably/btcwire"
 )
 
 // Errors that the various database functions may return.

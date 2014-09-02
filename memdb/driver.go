@@ -7,7 +7,7 @@ package memdb
 import (
 	"fmt"
 
-	"github.com/conformal/btcdb"
+	"github.com/mably/btcdb"
 	"github.com/conformal/btclog"
 )
 

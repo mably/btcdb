@@ -8,9 +8,9 @@ import (
 	"bytes"
 	"encoding/binary"
 
-	"github.com/conformal/btcdb"
-	"github.com/conformal/btcutil"
-	"github.com/conformal/btcwire"
+	"github.com/mably/btcdb"
+	"github.com/mably/btcutil"
+	"github.com/mably/btcwire"
 	"github.com/conformal/goleveldb/leveldb"
 )
 

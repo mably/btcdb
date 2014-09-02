@@ -11,10 +11,10 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/conformal/btcdb"
+	"github.com/mably/btcdb"
 	"github.com/conformal/btclog"
-	"github.com/conformal/btcutil"
-	"github.com/conformal/btcwire"
+	"github.com/mably/btcutil"
+	"github.com/mably/btcwire"
 	"github.com/conformal/goleveldb/leveldb"
 	"github.com/conformal/goleveldb/leveldb/cache"
 	"github.com/conformal/goleveldb/leveldb/opt"
