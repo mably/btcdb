@@ -1,8 +1,8 @@
 btcdb
 =====
 
-[![Build Status](https://travis-ci.org/conformal/btcdb.png?branch=master)]
-(https://travis-ci.org/conformal/btcdb)
+[![Build Status](https://travis-ci.org/mably/btcdb.png?branch=master)]
+(https://travis-ci.org/mably/btcdb)
 
 Package btcdb provides a database interface for the bitcoin block chain and
 transactions.  There is a test suite with a high percentage of code coverage.
