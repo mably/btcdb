@@ -33,7 +33,7 @@ var (
 
 	// blockDataFile is the path to a file containing the first 256 blocks
 	// of the block chain.
-	blockDataFile = filepath.Join("testdata", "blocks1-256.bz2")
+	blockDataFile = filepath.Join("testdata", "blocks1-1536.bz2")
 )
 
 var zeroHash = btcwire.ShaHash{}
