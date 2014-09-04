@@ -122,7 +122,7 @@ out:
 
 	mblk := btcwire.NewMsgBlock(&bh)
 
-	hash, _ := btcwire.NewShaHashFromStr("df2b060fa2e5e9c8ed5eaf6a45c13753ec8c63282b2688322eba40cd98ea067a")
+	hash, _ := btcwire.NewShaHashFromStr("24f80244964eb3b6ce3af70498515e916c774aa35b72beb0061e89252e6fada5")
 
 	po := btcwire.NewOutPoint(hash, 0)
 	txI := btcwire.NewTxIn(po, []byte("garbage"))

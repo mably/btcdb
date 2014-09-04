@@ -68,8 +68,7 @@ func exampleLoadDB() (btcdb.Db, error) {
 
 // This example demonstrates querying the database for the most recent best
 // block height and hash.
-//TODO Off now, strange error
-func Off_ExampleDb_newestSha() {
+func ExampleDb_newestSha() {
 	// Load a database for the purposes of this example and schedule it to
 	// be closed on exit.  See the CreateDB example for more details on what
 	// this step is doing.
@@ -89,6 +88,6 @@ func Off_ExampleDb_newestSha() {
 	fmt.Println("Latest height:", latestHeight)
 
 	// Output:
-	// Latest hash: 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
+	// Latest hash: 0000000032fe677166d54963b62a4677d8957e87c508eaa4fd7eb1c880cd27e3
 	// Latest height: 0
 }
