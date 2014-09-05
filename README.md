@@ -3,6 +3,7 @@ btcdb
 
 [![Build Status](https://travis-ci.org/mably/btcdb.png?branch=master)]
 (https://travis-ci.org/mably/btcdb)
+[![tip for next commit](http://peer4commit.com/projects/130.svg)](http://peer4commit.com/projects/130)
 
 Package btcdb provides a database interface for the bitcoin block chain and
 transactions.  There is a test suite with a high percentage of code coverage.
