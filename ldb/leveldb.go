@@ -11,13 +11,13 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/mably/btcdb"
 	"github.com/conformal/btclog"
-	"github.com/mably/btcutil"
-	"github.com/mably/btcwire"
 	"github.com/conformal/goleveldb/leveldb"
 	"github.com/conformal/goleveldb/leveldb/cache"
 	"github.com/conformal/goleveldb/leveldb/opt"
+	"github.com/mably/btcdb"
+	"github.com/mably/btcutil"
+	"github.com/mably/btcwire"
 )
 
 const (
@@ -353,7 +353,7 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 		return 0, err
 	}
 	mblock := block.MsgBlock()
-	rawMsg, err := block.Bytes()
+	rawMsg, err := block.BytesWithMeta()
 	if err != nil {
 		log.Warnf("Failed to obtain raw block sha %v", blocksha)
 		return 0, err
