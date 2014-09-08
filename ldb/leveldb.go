@@ -306,7 +306,7 @@ func (db *LevelDb) DropAfterBlockBySha(sha *btcwire.ShaHash) (rerr error) {
 		if err != nil {
 			return err
 		}
-		blk, err = btcutil.NewBlockFromBytes(buf)
+		blk, err = btcutil.NewBlockFromBytesWithMeta(buf)
 		if err != nil {
 			return err
 		}
