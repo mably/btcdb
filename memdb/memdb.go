@@ -83,6 +83,7 @@ type MemDb struct {
 	// blocks holds all of the bitcoin blocks that will be in the memory
 	// database.
 	blocks []*btcwire.MsgBlock
+	metas  []*btcutil.Meta
 
 	// blocksBySha keeps track of block heights by hash.  The height can
 	// be used as an index into the blocks slice.
@@ -190,6 +191,9 @@ func (db *MemDb) DropAfterBlockBySha(sha *btcwire.ShaHash) error {
 
 		db.blocks[i] = nil
 		db.blocks = db.blocks[:i]
+
+		db.metas[i] = nil
+		db.metas = db.metas[:i]
 	}
 
 	return nil
@@ -641,6 +645,8 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 
 	db.blocks = append(db.blocks, msgBlock)
 	db.blocksBySha[*blockHash] = newHeight
+
+	db.metas = append(db.metas, block.Meta())
 
 	// Insert information about eacj transaction and spend all of the
 	// outputs referenced by the inputs to the transactions.

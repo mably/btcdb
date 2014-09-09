@@ -11,13 +11,13 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/mably/btcdb"
 	"github.com/conformal/btclog"
-	"github.com/mably/btcutil"
-	"github.com/mably/btcwire"
 	"github.com/conformal/goleveldb/leveldb"
 	"github.com/conformal/goleveldb/leveldb/cache"
 	"github.com/conformal/goleveldb/leveldb/opt"
+	"github.com/mably/btcdb"
+	"github.com/mably/btcutil"
+	"github.com/mably/btcwire"
 )
 
 const (
@@ -337,6 +337,7 @@ func (db *LevelDb) DropAfterBlockBySha(sha *btcwire.ShaHash) (rerr error) {
 // genesis block.  Every subsequent block insert requires the referenced parent
 // block to already exist.
 func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) {
+
 	db.dbLock.Lock()
 	defer db.dbLock.Unlock()
 	defer func() {
@@ -353,11 +354,13 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 		return 0, err
 	}
 	mblock := block.MsgBlock()
-	rawMsg, err := block.Bytes()
+
+	rawMsg, err := block.BytesWithMeta()
 	if err != nil {
 		log.Warnf("Failed to obtain raw block sha %v", blocksha)
 		return 0, err
 	}
+
 	txloc, err := block.TxLoc()
 	if err != nil {
 		log.Warnf("Failed to obtain raw block sha %v", blocksha)
@@ -365,8 +368,8 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 	}
 
 	// Insert block into database
-	newheight, err := db.insertBlockData(blocksha, &mblock.Header.PrevBlock,
-		rawMsg)
+	newheight, err := db.insertBlockData(
+		blocksha, &mblock.Header.PrevBlock, rawMsg)
 	if err != nil {
 		log.Warnf("Failed to insert block %v %v %v", blocksha,
 			&mblock.Header.PrevBlock, err)
