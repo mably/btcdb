@@ -8,10 +8,10 @@ import (
 	"bytes"
 	"encoding/binary"
 
+	"github.com/conformal/goleveldb/leveldb"
 	"github.com/mably/btcdb"
 	"github.com/mably/btcutil"
 	"github.com/mably/btcwire"
-	"github.com/conformal/goleveldb/leveldb"
 )
 
 // FetchBlockBySha - return a btcutil Block
@@ -30,7 +30,7 @@ func (db *LevelDb) fetchBlockBySha(sha *btcwire.ShaHash) (blk *btcutil.Block, er
 		return
 	}
 
-	blk, err = btcutil.NewBlockFromBytes(buf)
+	blk, err = btcutil.NewBlockFromBytesWithMeta(buf)
 	if err != nil {
 		return
 	}
