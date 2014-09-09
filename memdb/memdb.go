@@ -273,6 +273,28 @@ func (db *MemDb) FetchBlockHeaderBySha(sha *btcwire.ShaHash) (*btcwire.BlockHead
 	return nil, fmt.Errorf("block header %v is not in database", sha)
 }
 
+// FetchBlockHeaderBySha returns a btcwire.BlockHeader for the given sha.  The
+// implementation may cache the underlying data if desired.  This is part of the
+// btcdb.Db interface implementation.
+//
+// This implementation does not use any additional cache since the entire
+// database is already in memory.
+func (db *MemDb) FetchBlockHeaderMetaBySha(sha *btcwire.ShaHash) (*btcwire.BlockHeader, *btcutil.Meta, error) {
+	db.Lock()
+	defer db.Unlock()
+
+	if db.closed {
+		return nil, nil, ErrDbClosed
+	}
+
+	if blockHeight, exists := db.blocksBySha[*sha]; exists {
+		block := db.blocks[int(blockHeight)]
+		return &block.Header, nil, nil
+	}
+
+	return nil, nil, fmt.Errorf("block header %v is not in database", sha)
+}
+
 // FetchBlockShaByHeight returns a block hash based on its height in the block
 // chain.  This is part of the btcdb.Db interface implementation.
 func (db *MemDb) FetchBlockShaByHeight(height int64) (*btcwire.ShaHash, error) {
