@@ -353,7 +353,8 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 		log.Warnf("Failed to compute block sha %v", blocksha)
 		return 0, err
 	}
-	mblock := block.MsgBlock()
+
+	defer btcutil.TimeTrack(log, btcutil.Now(), fmt.Sprintf("InsertBlock(%v)", blocksha))
 
 	rawMsg, err := block.BytesWithMeta()
 	if err != nil {
@@ -366,6 +367,8 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 		log.Warnf("Failed to obtain raw block sha %v", blocksha)
 		return 0, err
 	}
+
+	mblock := block.MsgBlock()
 
 	// Insert block into database
 	newheight, err := db.insertBlockData(
@@ -399,7 +402,7 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 			return 0, err
 		}
 
-		// Some old blocks contain duplicate transactions
+		/*// Some old blocks contain duplicate transactions
 		// Attempt to cleanly bypass this problem by marking the
 		// first as fully spent.
 		// http://blockexplorer.com/b/91812 dup in 91842
@@ -439,7 +442,7 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 					log.Warnf("block %v idx %v failed to spend tx %v %v err %v", blocksha, newheight, &txsha, txidx, err)
 				}
 			}
-		}
+		}*/
 
 		err = db.doSpend(tx)
 		if err != nil {
