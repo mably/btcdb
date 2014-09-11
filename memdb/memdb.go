@@ -83,7 +83,7 @@ type MemDb struct {
 	// blocks holds all of the bitcoin blocks that will be in the memory
 	// database.
 	blocks []*btcwire.MsgBlock
-	metas  []*btcutil.Meta
+	metas  []*btcwire.Meta
 
 	// blocksBySha keeps track of block heights by hash.  The height can
 	// be used as an index into the blocks slice.
