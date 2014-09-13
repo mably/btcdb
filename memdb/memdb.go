@@ -25,8 +25,8 @@ var (
 
 	// The following two hashes are ones that must be specially handled.
 	// See the comments where they're used for more details.
-	dupTxHash91842 = newShaHashFromStr("d5d27987d2a3dfc724e359870c6644b40e497bdc0589a033220fe15429d88599")
-	dupTxHash91880 = newShaHashFromStr("e3bf3d07d4b0375638d5f1db5255fe07ba2c4cb067cd81b84ee974b6585fb468")
+	//dupTxHash91842 = newShaHashFromStr("d5d27987d2a3dfc724e359870c6644b40e497bdc0589a033220fe15429d88599")
+	//dupTxHash91880 = newShaHashFromStr("e3bf3d07d4b0375638d5f1db5255fe07ba2c4cb067cd81b84ee974b6585fb468")
 )
 
 // tTxInsertData holds information about the location and spent status of
@@ -581,13 +581,13 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 		// the block chain history and must be dealth with specially.
 		// http://blockexplorer.com/b/91842
 		// http://blockexplorer.com/b/91880
-		if newHeight == 91842 && tx.Sha().IsEqual(dupTxHash91842) {
+		/*if newHeight == 91842 && tx.Sha().IsEqual(dupTxHash91842) {
 			continue
 		}
 
 		if newHeight == 91880 && tx.Sha().IsEqual(dupTxHash91880) {
 			continue
-		}
+		}*/
 
 		for _, txIn := range tx.MsgTx().TxIn {
 			if isCoinbaseInput(txIn) {
@@ -645,9 +645,9 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 	}
 
 	db.blocks = append(db.blocks, msgBlock)
-	db.blocksBySha[*blockHash] = newHeight
-
 	db.metas = append(db.metas, block.Meta())
+
+	db.blocksBySha[*blockHash] = newHeight
 
 	// Insert information about eacj transaction and spend all of the
 	// outputs referenced by the inputs to the transactions.
