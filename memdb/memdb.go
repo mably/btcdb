@@ -231,7 +231,8 @@ func (db *MemDb) FetchBlockBySha(sha *btcwire.ShaHash) (*btcutil.Block, error) {
 	}
 
 	if blockHeight, exists := db.blocksBySha[*sha]; exists {
-		block := btcutil.NewBlock(db.blocks[int(blockHeight)])
+		block := btcutil.NewBlockWithMetas(
+			db.blocks[int(blockHeight)], db.metas[int(blockHeight)])
 		block.SetHeight(blockHeight)
 		return block, nil
 	}

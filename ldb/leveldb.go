@@ -371,7 +371,7 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 	mblock := block.MsgBlock()
 	mmeta := block.Meta();
 
-	log.Infof("Inserting block %v, %v", mblock, mmeta)
+	log.Tracef("Inserting block %+v, %+v", mblock, mmeta)
 
 	// Insert block into database
 	newheight, err := db.insertBlockData(
