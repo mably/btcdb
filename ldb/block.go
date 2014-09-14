@@ -49,26 +49,35 @@ func (db *LevelDb) FetchBlockHeightBySha(sha *btcwire.ShaHash) (int64, error) {
 }
 
 // FetchBlockHeaderBySha - return a btcwire ShaHash
-func (db *LevelDb) FetchBlockHeaderBySha(sha *btcwire.ShaHash) (bh *btcwire.BlockHeader, err error) {
+func (db *LevelDb) FetchBlockHeaderBySha(sha *btcwire.ShaHash) (bh *btcwire.BlockHeader, bm *btcwire.Meta, err error) {
 	db.dbLock.Lock()
 	defer db.dbLock.Unlock()
 
 	// Read the raw block from the database.
 	buf, _, err := db.fetchSha(sha)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+
+	// Deserialize Meta
+	r := bytes.NewReader(buf)
+	var meta btcwire.Meta
+	err = meta.Deserialize(r)
+	if err != nil {
+		return nil, nil, err
 	}
 
 	// Only deserialize the header portion and ensure the transaction count
 	// is zero since this is a standalone header.
 	var blockHeader btcwire.BlockHeader
-	err = blockHeader.Deserialize(bytes.NewReader(buf))
+	err = blockHeader.Deserialize(r)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	bh = &blockHeader
+	bm = &meta
 
-	return bh, err
+	return bh, bm, err
 }
 
 func (db *LevelDb) getBlkLoc(sha *btcwire.ShaHash) (int64, error) {

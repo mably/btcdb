@@ -263,19 +263,19 @@ func (db *MemDb) FetchBlockHeightBySha(sha *btcwire.ShaHash) (int64, error) {
 //
 // This implementation does not use any additional cache since the entire
 // database is already in memory.
-func (db *MemDb) FetchBlockHeaderBySha(sha *btcwire.ShaHash) (*btcwire.BlockHeader, error) {
+func (db *MemDb) FetchBlockHeaderBySha(sha *btcwire.ShaHash) (*btcwire.BlockHeader, *btcwire.Meta, error) {
 	db.Lock()
 	defer db.Unlock()
 
 	if db.closed {
-		return nil, ErrDbClosed
+		return nil, nil, ErrDbClosed
 	}
 
 	if blockHeight, exists := db.blocksBySha[*sha]; exists {
-		return &db.blocks[int(blockHeight)].Header, nil
+		return &db.blocks[int(blockHeight)].Header, db.metas[int(blockHeight)], nil
 	}
 
-	return nil, fmt.Errorf("block header %v is not in database", sha)
+	return nil, nil, fmt.Errorf("block header %v is not in database", sha)
 }
 
 // FetchBlockShaByHeight returns a block hash based on its height in the block
