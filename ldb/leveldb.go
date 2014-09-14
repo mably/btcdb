@@ -369,7 +369,8 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 	}
 
 	mblock := block.MsgBlock()
-	mmeta := block.Meta();
+	mmeta := block.Meta()
+	metaLen := mmeta.GetSerializedSize()
 
 	log.Tracef("Inserting block %+v, %+v", mblock, mmeta)
 
@@ -399,7 +400,7 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 			}
 		}
 
-		err = db.insertTx(txsha, newheight, txloc[txidx].TxStart, txloc[txidx].TxLen, spentbuf)
+		err = db.insertTx(txsha, newheight, metaLen+txloc[txidx].TxStart, txloc[txidx].TxLen, spentbuf)
 		if err != nil {
 			log.Warnf("block %v idx %v failed to insert tx %v %v err %v", blocksha, newheight, &txsha, txidx, err)
 			return 0, err
