@@ -7,8 +7,8 @@ package btcdb
 import (
 	"errors"
 
-	"github.com/conformal/btcutil"
-	"github.com/conformal/btcwire"
+	"github.com/mably/btcutil"
+	"github.com/mably/btcwire"
 )
 
 // Errors that the various database functions may return.
@@ -52,7 +52,7 @@ type Db interface {
 
 	// FetchBlockHeaderBySha returns a btcwire.BlockHeader for the given
 	// sha.  The implementation may cache the underlying data if desired.
-	FetchBlockHeaderBySha(sha *btcwire.ShaHash) (bh *btcwire.BlockHeader, err error)
+	FetchBlockHeaderBySha(sha *btcwire.ShaHash) (bh *btcwire.BlockHeader, bm *btcwire.Meta, err error)
 
 	// FetchBlockShaByHeight returns a block hash based on its height in the
 	// block chain.

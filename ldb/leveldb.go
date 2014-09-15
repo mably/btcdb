@@ -11,13 +11,13 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/conformal/btcdb"
 	"github.com/conformal/btclog"
-	"github.com/conformal/btcutil"
-	"github.com/conformal/btcwire"
 	"github.com/conformal/goleveldb/leveldb"
 	"github.com/conformal/goleveldb/leveldb/cache"
 	"github.com/conformal/goleveldb/leveldb/opt"
+	"github.com/mably/btcdb"
+	"github.com/mably/btcutil"
+	"github.com/mably/btcwire"
 )
 
 const (
@@ -306,7 +306,7 @@ func (db *LevelDb) DropAfterBlockBySha(sha *btcwire.ShaHash) (rerr error) {
 		if err != nil {
 			return err
 		}
-		blk, err = btcutil.NewBlockFromBytes(buf)
+		blk, err = btcutil.NewBlockFromBytesWithMeta(buf)
 		if err != nil {
 			return err
 		}
@@ -337,6 +337,7 @@ func (db *LevelDb) DropAfterBlockBySha(sha *btcwire.ShaHash) (rerr error) {
 // genesis block.  Every subsequent block insert requires the referenced parent
 // block to already exist.
 func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) {
+
 	db.dbLock.Lock()
 	defer db.dbLock.Unlock()
 	defer func() {
@@ -352,21 +353,30 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 		log.Warnf("Failed to compute block sha %v", blocksha)
 		return 0, err
 	}
-	mblock := block.MsgBlock()
-	rawMsg, err := block.Bytes()
+
+	defer btcutil.TimeTrack(log, btcutil.Now(), fmt.Sprintf("InsertBlock(%v)", blocksha))
+
+	rawMsg, err := block.BytesWithMeta()
 	if err != nil {
 		log.Warnf("Failed to obtain raw block sha %v", blocksha)
 		return 0, err
 	}
+
 	txloc, err := block.TxLoc()
 	if err != nil {
 		log.Warnf("Failed to obtain raw block sha %v", blocksha)
 		return 0, err
 	}
 
+	mblock := block.MsgBlock()
+	mmeta := block.Meta()
+	metaLen := mmeta.GetSerializedSize()
+
+	log.Tracef("Inserting block %+v, %+v", mblock, mmeta)
+
 	// Insert block into database
-	newheight, err := db.insertBlockData(blocksha, &mblock.Header.PrevBlock,
-		rawMsg)
+	newheight, err := db.insertBlockData(
+		blocksha, &mblock.Header.PrevBlock, rawMsg)
 	if err != nil {
 		log.Warnf("Failed to insert block %v %v %v", blocksha,
 			&mblock.Header.PrevBlock, err)
@@ -390,13 +400,13 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 			}
 		}
 
-		err = db.insertTx(txsha, newheight, txloc[txidx].TxStart, txloc[txidx].TxLen, spentbuf)
+		err = db.insertTx(txsha, newheight, metaLen+txloc[txidx].TxStart, txloc[txidx].TxLen, spentbuf)
 		if err != nil {
 			log.Warnf("block %v idx %v failed to insert tx %v %v err %v", blocksha, newheight, &txsha, txidx, err)
 			return 0, err
 		}
 
-		// Some old blocks contain duplicate transactions
+		/*// Some old blocks contain duplicate transactions
 		// Attempt to cleanly bypass this problem by marking the
 		// first as fully spent.
 		// http://blockexplorer.com/b/91812 dup in 91842
@@ -436,7 +446,7 @@ func (db *LevelDb) InsertBlock(block *btcutil.Block) (height int64, rerr error) 
 					log.Warnf("block %v idx %v failed to spend tx %v %v err %v", blocksha, newheight, &txsha, txidx, err)
 				}
 			}
-		}
+		}*/
 
 		err = db.doSpend(tx)
 		if err != nil {

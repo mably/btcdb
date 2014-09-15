@@ -14,12 +14,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/conformal/btcdb"
-	_ "github.com/conformal/btcdb/ldb"
-	_ "github.com/conformal/btcdb/memdb"
-	"github.com/conformal/btcnet"
-	"github.com/conformal/btcutil"
-	"github.com/conformal/btcwire"
+	"github.com/mably/btcdb"
+	_ "github.com/mably/btcdb/ldb"
+	_ "github.com/mably/btcdb/memdb"
+	"github.com/mably/btcnet"
+	"github.com/mably/btcutil"
+	"github.com/mably/btcwire"
 )
 
 var (
@@ -33,7 +33,7 @@ var (
 
 	// blockDataFile is the path to a file containing the first 256 blocks
 	// of the block chain.
-	blockDataFile = filepath.Join("testdata", "blocks1-256.bz2")
+	blockDataFile = filepath.Join("testdata", "blocks1-1536.bz2")
 )
 
 var zeroHash = btcwire.ShaHash{}

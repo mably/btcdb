@@ -6,10 +6,10 @@ package btcdb_test
 
 import (
 	"fmt"
-	"github.com/conformal/btcdb"
-	_ "github.com/conformal/btcdb/memdb"
-	"github.com/conformal/btcnet"
-	"github.com/conformal/btcutil"
+	"github.com/mably/btcdb"
+	_ "github.com/mably/btcdb/memdb"
+	"github.com/mably/btcnet"
+	"github.com/mably/btcutil"
 )
 
 // This example demonstrates creating a new database and inserting the genesis
@@ -19,8 +19,8 @@ func ExampleCreateDB() {
 	// Ordinarily this would be whatever driver(s) your application
 	// requires.
 	// import (
-	//	"github.com/conformal/btcdb"
-	// 	_ "github.com/conformal/btcdb/memdb"
+	//	"github.com/mably/btcdb"
+	// 	_ "github.com/mably/btcdb/memdb"
 	// )
 
 	// Create a database and schedule it to be closed on exit.  This example
@@ -88,6 +88,6 @@ func ExampleDb_newestSha() {
 	fmt.Println("Latest height:", latestHeight)
 
 	// Output:
-	// Latest hash: 000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
+	// Latest hash: 0000000032fe677166d54963b62a4677d8957e87c508eaa4fd7eb1c880cd27e3
 	// Latest height: 0
 }

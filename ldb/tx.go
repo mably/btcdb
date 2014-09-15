@@ -8,9 +8,9 @@ import (
 	"bytes"
 	"encoding/binary"
 
-	"github.com/conformal/btcdb"
-	"github.com/conformal/btcwire"
 	"github.com/conformal/goleveldb/leveldb"
+	"github.com/mably/btcdb"
+	"github.com/mably/btcwire"
 )
 
 type txUpdateObj struct {

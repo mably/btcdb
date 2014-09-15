@@ -8,8 +8,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/conformal/btcdb"
-	"github.com/conformal/btcwire"
+	"github.com/mably/btcdb"
+	"github.com/mably/btcwire"
 )
 
 // we need to test for empty databas and make certain it returns proper value
