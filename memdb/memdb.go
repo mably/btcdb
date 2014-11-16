@@ -17,7 +17,7 @@ import (
 
 // Errors that the various database functions may return.
 var (
-	ErrDbClosed = errors.New("Database is closed")
+	ErrDbClosed = errors.New("database is closed")
 )
 
 var (
@@ -52,7 +52,7 @@ func newShaHashFromStr(hexStr string) *btcwire.ShaHash {
 // a single input that has a previous output transaction index set to the
 // maximum value along with a zero hash.
 func isCoinbaseInput(txIn *btcwire.TxIn) bool {
-	prevOut := &txIn.PreviousOutpoint
+	prevOut := &txIn.PreviousOutPoint
 	if prevOut.Index == math.MaxUint32 && prevOut.Hash.IsEqual(&zeroHash) {
 		return true
 	}
@@ -106,7 +106,7 @@ func (db *MemDb) removeTx(msgTx *btcwire.MsgTx, txHash *btcwire.ShaHash) {
 			continue
 		}
 
-		prevOut := &txIn.PreviousOutpoint
+		prevOut := &txIn.PreviousOutPoint
 		originTxns, exists := db.txns[prevOut.Hash]
 		if !exists {
 			log.Warnf("Unable to find input transaction %s to "+
@@ -388,7 +388,7 @@ func (db *MemDb) FetchTxBySha(txHash *btcwire.ShaHash) ([]*btcdb.TxListReply, er
 	if !exists {
 		log.Warnf("FetchTxBySha: requested hash of %s does not exist",
 			txHash)
-		return nil, btcdb.TxShaMissing
+		return nil, btcdb.ErrTxShaMissing
 	}
 
 	txHashCopy := *txHash
@@ -436,7 +436,7 @@ func (db *MemDb) fetchTxByShaList(txShaList []*btcwire.ShaHash, includeSpent boo
 		// information if the transaction exists.
 		reply := btcdb.TxListReply{
 			Sha: txShaList[i],
-			Err: btcdb.TxShaMissing,
+			Err: btcdb.ErrTxShaMissing,
 		}
 		replyList = append(replyList, &reply)
 
@@ -553,7 +553,7 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 	msgBlock := block.MsgBlock()
 	if _, exists := db.blocksBySha[msgBlock.Header.PrevBlock]; !exists {
 		if len(db.blocks) > 0 {
-			return 0, btcdb.PrevShaMissing
+			return 0, btcdb.ErrPrevShaMissing
 		}
 	}
 
@@ -598,13 +598,13 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 			// the output of another transaction in this block only
 			// if the referenced transaction comes before the
 			// current one in this block.
-			prevOut := &txIn.PreviousOutpoint
+			prevOut := &txIn.PreviousOutPoint
 			if inFlightIndex, ok := txInFlight[prevOut.Hash]; ok {
 				if i <= inFlightIndex {
 					log.Warnf("InsertBlock: requested hash "+
 						" of %s does not exist in-flight",
 						tx.Sha())
-					return 0, btcdb.TxShaMissing
+					return 0, btcdb.ErrTxShaMissing
 				}
 			} else {
 				originTxns, exists := db.txns[prevOut.Hash]
@@ -612,14 +612,14 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 					log.Warnf("InsertBlock: requested hash "+
 						"of %s by %s does not exist",
 						prevOut.Hash, tx.Sha())
-					return 0, btcdb.TxShaMissing
+					return 0, btcdb.ErrTxShaMissing
 				}
 				originTxD := originTxns[len(originTxns)-1]
 				if prevOut.Index > uint32(len(originTxD.spentBuf)) {
 					log.Warnf("InsertBlock: requested hash "+
 						"of %s with index %d does not "+
 						"exist", tx.Sha(), prevOut.Index)
-					return 0, btcdb.TxShaMissing
+					return 0, btcdb.ErrTxShaMissing
 				}
 			}
 		}
@@ -629,7 +629,7 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 			inFlightIndex < i {
 			log.Warnf("Block contains duplicate transaction %s",
 				tx.Sha())
-			return 0, btcdb.DuplicateSha
+			return 0, btcdb.ErrDuplicateSha
 		}
 
 		// Prevent duplicate transactions unless the old one is fully
@@ -639,7 +639,7 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 			if !isFullySpent(txD) {
 				log.Warnf("Attempt to insert duplicate "+
 					"transaction %s", tx.Sha())
-				return 0, btcdb.DuplicateSha
+				return 0, btcdb.ErrDuplicateSha
 			}
 		}
 	}
@@ -668,7 +668,7 @@ func (db *MemDb) InsertBlock(block *btcutil.Block) (int64, error) {
 			}
 
 			// Already checked for existing and valid ranges above.
-			prevOut := &txIn.PreviousOutpoint
+			prevOut := &txIn.PreviousOutPoint
 			originTxns := db.txns[prevOut.Hash]
 			originTxD := originTxns[len(originTxns)-1]
 			originTxD.spentBuf[prevOut.Index] = true

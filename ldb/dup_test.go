@@ -56,10 +56,10 @@ out:
 		var txneededList []*btcwire.ShaHash
 		for _, tx := range mblock.Transactions {
 			for _, txin := range tx.TxIn {
-				if txin.PreviousOutpoint.Index == uint32(4294967295) {
+				if txin.PreviousOutPoint.Index == uint32(4294967295) {
 					continue
 				}
-				origintxsha := &txin.PreviousOutpoint.Hash
+				origintxsha := &txin.PreviousOutPoint.Hash
 				txneededList = append(txneededList, origintxsha)
 
 				exists, err := db.ExistsTxSha(origintxsha)
@@ -154,7 +154,7 @@ out:
 
 	listReply = db.FetchUnSpentTxByShaList(fetchList)
 	for _, lr := range listReply {
-		if lr.Err != btcdb.TxShaMissing {
+		if lr.Err != btcdb.ErrTxShaMissing {
 			t.Errorf("sha %v spent %v err %v\n", lr.Sha,
 				lr.TxSpent, lr.Err)
 		}
