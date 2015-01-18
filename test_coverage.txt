@@ -1,6 +1,6 @@
 PASS
 coverage: 63.3% of statements
-ok  	github.com/conformal/btcdb	0.781s
+ok  	github.com/btcsuite/btcdb	0.781s
 github.com\conformal\btcdb\db.go:	AddDBDriver	100.0%
 github.com\conformal\btcdb\db.go:	CreateDB	100.0%
 github.com\conformal\btcdb\db.go:	OpenDB		100.0%
@@ -14,7 +14,7 @@ total:					(statements)	63.3%
 ============================================================
 PASS
 coverage: 77.3% of statements
-ok  	github.com/conformal/btcdb/ldb	0.581s
+ok  	github.com/btcsuite/btcdb/ldb	0.581s
 github.com\conformal\btcdb\ldb\block.go:	FetchBlockBySha		100.0%
 github.com\conformal\btcdb\ldb\block.go:	fetchBlockBySha		75.0%
 github.com\conformal\btcdb\ldb\block.go:	getBlkLoc		75.0%
@@ -72,7 +72,7 @@ total:						(statements)		76.9%
 ============================================================
 PASS
 coverage: 44.2% of statements
-ok  	github.com/conformal/btcdb/memdb	0.454s
+ok  	github.com/btcsuite/btcdb/memdb	0.454s
 github.com\conformal\btcdb\memdb\driver.go:	init			100.0%
 github.com\conformal\btcdb\memdb\driver.go:	OpenDB			0.0%
 github.com\conformal\btcdb\memdb\driver.go:	CreateDB		100.0%
